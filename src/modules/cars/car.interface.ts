@@ -9,8 +9,6 @@ export type Cars = {
   description: string;
   quantity: number;
   inStock: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
 export type carInterface = Model<Cars>;
