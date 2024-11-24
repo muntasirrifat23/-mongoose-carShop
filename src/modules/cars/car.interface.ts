@@ -1,6 +1,6 @@
 import { Model } from 'mongoose';
 
-export type cars = {
+export type Cars = {
   brand: string;
   model: string;
   year: number;
@@ -9,6 +9,8 @@ export type cars = {
   description: string;
   quantity: number;
   inStock: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
-export type carInterface = Model<cars>;
+export type carInterface = Model<Cars>;

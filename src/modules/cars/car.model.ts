@@ -1,16 +1,21 @@
-// import { model, Schema } from 'mongoose';
-// import { carInterface } from './car.interface';
+import { model, Schema } from 'mongoose';
+import { Cars } from './car.interface';
 
-// const carSchema = new Schema()<carInterface>({
-//   brand: { type: String },
-//   model: { type: String },
-//   year: { type: Number },
-//   price: { type: Number },
-//   category: ['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible'],
-//   description: { type: String },
-//   quantity: { type: Number },
-//   inStock: { type: Boolean },
-// });
+const carSchema = new Schema<Cars>({
+  brand: { type: String, required: true },
+  model: { type: String, required: true },
+  year: { type: Number, required: true },
+  price: { type: Number, required: true },
+  category: {
+    type: String,
+    enum: ['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible'],
+    required: true,
+  },
+  description: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  inStock: { type: Boolean, required: true },
+  createdAt: { type: Date, required: true },
+  updatedAt: { type: Date, required: true },
+});
 
-// // eslint-disable-next-line no-undef
-// export const CarsModel = model<Car, carInterface>('Car', carSchema);
+export const CarsModel = model<Cars>('Car', carSchema);
