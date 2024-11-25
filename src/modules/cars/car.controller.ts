@@ -20,7 +20,7 @@ const createCar = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Get Cr
+// Get Car
 const getCar = async (req: Request, res: Response) => {
   try {
     const result = await carServices.getCarIntoDb();
@@ -38,4 +38,28 @@ const getCar = async (req: Request, res: Response) => {
   }
 };
 
-export const carController = { createCar, getCar };
+// Get Car By ID
+const getSingleCarId = async (req: Request, res: Response) => {
+  try {
+    const carID = req.params.carID;
+    const result = await carServices.getSingleCarIntoDb(carID);
+    res.status(200).json({
+      message: 'Car id retrieved successfully',
+      success: true,
+      data: result,
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Car id retrieved is wrong',
+    });
+  }
+};
+
+//Export
+export const carController = {
+  createCar,
+  getCar,
+  getSingleCarId,
+};

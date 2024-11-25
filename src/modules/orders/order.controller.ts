@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { orderServices } from './order.service';
 
+// Create Order
 const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderData = req.body.orders;

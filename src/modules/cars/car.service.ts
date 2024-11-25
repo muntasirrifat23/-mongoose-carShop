@@ -1,6 +1,7 @@
 import { Cars } from './car.interface';
 import { CarsModel } from './car.model';
 
+// Create Cars
 const createCarIntoDB = async (carData: Cars) => {
   const postCar = new CarsModel(carData);
   return await postCar.save();
@@ -12,7 +13,14 @@ const getCarIntoDb = async () => {
   return result;
 };
 
+// Get Cars By ID
+const getSingleCarIntoDb = async (id: string) => {
+  const result = await CarsModel.findOne({ _id: id });
+  return result;
+};
+
 export const carServices = {
   createCarIntoDB,
   getCarIntoDb,
+  getSingleCarIntoDb,
 };
