@@ -1,11 +1,57 @@
 import { Request, Response } from 'express';
 import { carServices } from './car.service';
+import validateCar from './car.zodvalidation';
 
 // Create car
 const createCar = async (req: Request, res: Response): Promise<void> => {
   try {
     const carData = req.body.cars;
-    const result = await carServices.createCarIntoDB(carData);
+    const zodResult = validateCar.safeParse(carData);
+
+    if (!zodResult.success) {
+      const formattedErrors = zodResult.error.errors.reduce(
+        (acc, error) => {
+          const path = error.path[0] as string;
+          const errorDetails: Record<string, unknown> = {
+            message: error.message,
+            name: 'ValidatorError',
+            properties: {
+              message: error.message,
+              type: error.code,
+              min: 0,
+            },
+            kind: error.code,
+            path,
+          };
+
+          if ('minimum' in error) {
+            errorDetails.properties.min = error.minimum;
+          }
+          if ('maximum' in error) {
+            errorDetails.properties.max = error.maximum;
+          }
+          if ('received' in error) {
+            errorDetails.value = error.received;
+          }
+          acc[path] = errorDetails;
+          return acc;
+        },
+        {} as Record<string, unknown>,
+      );
+
+      return res.status(400).json({
+        message: 'Validation failed',
+        success: false,
+        error: {
+          name: 'ValidationError',
+          errors: formattedErrors,
+        },
+        stack: new Error().stack,
+      });
+    }
+
+    const result = await carServices.createCarIntoDB(zodResult.data);
+
     res.status(200).json({
       message: 'Car created successfully',
       success: true,
