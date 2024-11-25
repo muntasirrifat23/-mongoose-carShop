@@ -9,4 +9,6 @@ router.get('/cars', carController.getCar);
 
 router.get('/cars/:carID', carController.getSingleCarId);
 
+router.delete('/cars/:carID', carController.deleteCar);
+
 export const CarsRoutes = router;

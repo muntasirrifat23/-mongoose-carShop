@@ -57,9 +57,31 @@ const getSingleCarId = async (req: Request, res: Response) => {
   }
 };
 
+// Update Car
+
+// Delete Car
+const deleteCar = async (req: Request, res: Response) => {
+  try {
+    const carID = req.params.carID;
+    await carServices.deleteCarIntoDb(carID);
+    res.status(200).json({
+      message: 'Car deleted successfully',
+      success: true,
+      data: {},
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Car not deleted yet',
+    });
+  }
+};
+
 //Export
 export const carController = {
   createCar,
   getCar,
   getSingleCarId,
+  deleteCar,
 };
