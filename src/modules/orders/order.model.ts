@@ -4,7 +4,7 @@ import { Orders } from './order.interface';
 const orderSchema = new Schema<Orders>(
   {
     email: { type: String, required: true },
-    car: { type: Schema.Types.ObjectId, required: true },
+    car: { type: String, required: true },
     quantity: { type: Number },
     totalPrice: { type: Number },
   },

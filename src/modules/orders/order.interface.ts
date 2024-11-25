@@ -1,8 +1,8 @@
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 
 export type Orders = {
   email: string;
-  car: Types.ObjectId;
+  car: string;
   quantity: number;
   totalPrice: number;
 };
