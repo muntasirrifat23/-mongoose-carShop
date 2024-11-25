@@ -1,11 +1,37 @@
 import { Request, Response } from 'express';
 import { orderServices } from './order.service';
-
+import orderValidationSchema from './order.zodvalidation';
+import { z } from 'zod';
 // Create Order
+// const createOrder = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const orderData = req.body.orders;
+//     const zodOrderData = orderValidationSchema.parse(orderData);
+//     const result = await orderServices.createOrderIntoDb(zodOrderData);
+
+//     res.status(200).json({
+//       message: 'Order created successfully',
+//       success: true,
+//       data: result,
+//     });
+//   } catch (err: unknown) {
+//     const error = err as Error;
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || 'Order post is wrong',
+//     });
+//   }
+// };
+
 const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderData = req.body.orders;
-    const result = await orderServices.createOrderIntoDb(orderData);
+
+    // Validate using Zod
+    const zodOrderData = orderValidationSchema.parse(orderData);
+
+    // Pass validated data to the service
+    const result = await orderServices.createOrderIntoDb(zodOrderData);
 
     res.status(200).json({
       message: 'Order created successfully',
@@ -13,11 +39,41 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
       data: result,
     });
   } catch (err: unknown) {
-    const error = err as Error;
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Order post is wrong',
-    });
+    if (err instanceof z.ZodError) {
+      // Transform ZodError into the desired format
+      const errors = err.errors.reduce<Record<string, unknown>>(
+        (acc, curr: z.ZodIssue) => {
+          acc[curr.path.join('.')] = {
+            message: curr.message,
+            name: 'ValidatorError',
+            properties: {
+              message: curr.message,
+            },
+            kind: curr.code,
+            path: curr.path.join('.'),
+          };
+          return acc;
+        },
+        {},
+      );
+
+      res.status(400).json({
+        message: 'Validation failed',
+        success: false,
+        error: {
+          name: 'ValidationError',
+          errors,
+        },
+        stack: err.stack,
+      });
+    } else {
+      // For non-validation errors
+      const error = err as Error;
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Order post is wrong',
+      });
+    }
   }
 };
 
