@@ -19,6 +19,11 @@ const getSingleCarIntoDb = async (id: string) => {
   return result;
 };
 
+// Update Car
+const updateCarIntoDb = async (id: string, data: Partial<Cars>) => {
+  return await CarsModel.findByIdAndUpdate(id, data, { new: true });
+};
+
 // Delete Car
 const deleteCarIntoDb = async (id: string) => {
   const result = await CarsModel.findByIdAndDelete(id);
@@ -30,4 +35,5 @@ export const carServices = {
   getCarIntoDb,
   getSingleCarIntoDb,
   deleteCarIntoDb,
+  updateCarIntoDb,
 };

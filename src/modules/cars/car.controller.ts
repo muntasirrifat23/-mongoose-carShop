@@ -58,6 +58,24 @@ const getSingleCarId = async (req: Request, res: Response) => {
 };
 
 // Update Car
+const updateCar = async (req: Request, res: Response) => {
+  try {
+    const carID = req.params.carID;
+    const updatedData = req.body.cars;
+    const result = await carServices.updateCarIntoDb(carID, updatedData);
+    res.status(200).json({
+      message: 'Car updated successfully',
+      success: true,
+      data: result,
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Car not updated yet',
+    });
+  }
+};
 
 // Delete Car
 const deleteCar = async (req: Request, res: Response) => {
@@ -84,4 +102,5 @@ export const carController = {
   getCar,
   getSingleCarId,
   deleteCar,
+  updateCar,
 };
