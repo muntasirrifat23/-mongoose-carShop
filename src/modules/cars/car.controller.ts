@@ -67,23 +67,6 @@ const createCar = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Get Car
-// const getCar = async (req: Request, res: Response) => {
-//   try {
-//     const result = await carServices.getCarIntoDb();
-//     res.status(200).json({
-//       message: 'Car retrieved successfully',
-//       success: true,
-//       data: result,
-//     });
-//   } catch (err: unknown) {
-//     const error = err as Error;
-//     res.status(500).json({
-//       success: false,
-//       message: error.message || 'Car retrieved is wrong',
-//     });
-//   }
-// };
-// Get Car
 const getCar = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
