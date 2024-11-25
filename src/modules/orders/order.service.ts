@@ -3,6 +3,7 @@ import { CarsModel } from '../cars/car.model';
 import { OrdersModel } from './order.model';
 import { Orders } from './order.interface';
 
+// Create Order
 const createOrderIntoDb = async (orderData: Orders) => {
   const { email, car, quantity, totalPrice } = orderData;
   const carData = await CarsModel.findOne({ _id: car });
@@ -27,12 +28,23 @@ const createOrderIntoDb = async (orderData: Orders) => {
 
   await carData.save();
   const savedOrder = await order.save();
-
   const findCarOrder = await OrdersModel.findById(savedOrder._id).populate(
     'car',
   );
-
   return { success: true, data: findCarOrder };
 };
 
-export const orderServices = { createOrderIntoDb };
+// Revenue
+const createRevenueIntoDb = async () => {
+  const revenueData = await OrdersModel.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: { $multiply: ['$totalPrice', '$quantity'] } },
+      },
+    },
+  ]);
+  return revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
+};
+
+export const orderServices = { createOrderIntoDb, createRevenueIntoDb };

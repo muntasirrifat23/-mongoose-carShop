@@ -21,4 +21,24 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const orderController = { createOrder };
+// Revenue
+const createRevenue = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const totalRevenue = await orderServices.createRevenueIntoDb();
+    res.status(200).json({
+      message: 'Revenue calculated successfully',
+      status: true,
+      data: {
+        totalRevenue,
+      },
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Revenue calculating error',
+    });
+  }
+};
+
+export const orderController = { createOrder, createRevenue };
