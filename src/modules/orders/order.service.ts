@@ -15,9 +15,7 @@ const createOrderIntoDb = async (orderData: Orders) => {
     return { success: false, message: 'Not enough stock available' };
   }
 
-  // Create new order
   const order = new OrdersModel({ email, car, quantity, totalPrice });
-
   // Reducing stock quantity for cars after orders
   carData.quantity -= quantity;
 
@@ -47,4 +45,33 @@ const createRevenueIntoDb = async () => {
   return revenueData.length > 0 ? revenueData[0].totalRevenue : 0;
 };
 
-export const orderServices = { createOrderIntoDb, createRevenueIntoDb };
+// Get Orders
+const getOrderIntoDb = async () => {
+  const result = await OrdersModel.find();
+  return result;
+};
+
+// Get Orders By ID
+const getSingleOrderIntoDb = async (id: string) => {
+  const result = await OrdersModel.findOne({ _id: id });
+  return result;
+};
+
+// Update Order
+const updateOrderIntoDb = async (id: string, data: Partial<Orders>) => {
+  return await OrdersModel.findByIdAndUpdate(id, data, { new: true });
+};
+
+// Delete Order
+const deleteOrderIntoDb = async (id: string) => {
+  return await OrdersModel.findByIdAndDelete(id);
+};
+
+export const orderServices = {
+  createOrderIntoDb,
+  createRevenueIntoDb,
+  getOrderIntoDb,
+  getSingleOrderIntoDb,
+  updateOrderIntoDb,
+  deleteOrderIntoDb,
+};
