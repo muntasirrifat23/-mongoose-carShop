@@ -5,8 +5,6 @@ export type Orders = {
   car: Types.ObjectId;
   quantity: number;
   totalPrice: number;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
 export type orderInterface = Model<Orders>;
