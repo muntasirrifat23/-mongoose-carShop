@@ -4,7 +4,6 @@ import { carServices } from './car.service';
 const createCar = async (req: Request, res: Response): Promise<void> => {
   try {
     const carData = req.body.cars;
-    // const { Cars: carData } = req.body;
     const result = await carServices.createCarIntoDB(carData);
 
     res.status(200).json({

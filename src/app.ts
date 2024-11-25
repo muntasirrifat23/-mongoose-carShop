@@ -6,7 +6,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/v1/cars', CarsRoutes);
+app.use('/api/', CarsRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   const a = 10;
