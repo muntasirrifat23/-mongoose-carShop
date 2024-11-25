@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 
 export type Cars = {
+  _id: string;
   brand: string;
   model: string;
   year: number;
