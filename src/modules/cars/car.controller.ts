@@ -67,11 +67,32 @@ const createCar = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Get Car
+// const getCar = async (req: Request, res: Response) => {
+//   try {
+//     const result = await carServices.getCarIntoDb();
+//     res.status(200).json({
+//       message: 'Car retrieved successfully',
+//       success: true,
+//       data: result,
+//     });
+//   } catch (err: unknown) {
+//     const error = err as Error;
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || 'Car retrieved is wrong',
+//     });
+//   }
+// };
+// Get Car
 const getCar = async (req: Request, res: Response) => {
   try {
-    const result = await carServices.getCarIntoDb();
+    const { searchTerm } = req.query;
+
+    // Call service with optional searchTerm
+    const result = await carServices.getCarIntoDb(searchTerm as string);
+
     res.status(200).json({
-      message: 'Car retrieved successfully',
+      message: 'Cars retrieved successfully',
       success: true,
       data: result,
     });
@@ -79,7 +100,7 @@ const getCar = async (req: Request, res: Response) => {
     const error = err as Error;
     res.status(500).json({
       success: false,
-      message: error.message || 'Car retrieved is wrong',
+      message: error.message || 'Failed to retrieve cars',
     });
   }
 };
