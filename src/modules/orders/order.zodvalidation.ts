@@ -18,7 +18,4 @@ const orderValidationSchema = z.object({
   totalPrice: z.number().min(0, { message: 'Total Price positive number' }),
 });
 
-// export const validateOrder = (data: unknown) =>
-//   orderValidationSchema.safeParse(data);
-
 export default orderValidationSchema;

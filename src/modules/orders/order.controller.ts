@@ -7,11 +7,7 @@ import { z } from 'zod';
 const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderData = req.body.orders;
-
-    // Validate using Zod
     const zodOrderData = orderValidationSchema.parse(orderData);
-
-    // Pass validated data to the service
     const result = await orderServices.createOrderIntoDb(zodOrderData);
 
     res.status(200).json({
@@ -21,7 +17,6 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
     });
   } catch (err: unknown) {
     if (err instanceof z.ZodError) {
-      // Transform ZodError into the desired format
       const errors = err.errors.reduce<Record<string, unknown>>(
         (acc, curr: z.ZodIssue) => {
           acc[curr.path.join('.')] = {
@@ -48,7 +43,6 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
         stack: err.stack,
       });
     } else {
-      // For non-validation errors
       const error = err as Error;
       res.status(500).json({
         success: false,
