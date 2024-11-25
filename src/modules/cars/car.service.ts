@@ -6,4 +6,13 @@ const createCarIntoDB = async (carData: Cars) => {
   return await postCar.save();
 };
 
-export const carServices = { createCarIntoDB };
+// Get All Cars
+const getCarIntoDb = async () => {
+  const result = await CarsModel.find();
+  return result;
+};
+
+export const carServices = {
+  createCarIntoDB,
+  getCarIntoDb,
+};
