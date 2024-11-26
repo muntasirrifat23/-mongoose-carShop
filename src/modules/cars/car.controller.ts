@@ -9,29 +9,27 @@ const createCar = async (req: Request, res: Response): Promise<void> => {
     const zodResult = validateCar.safeParse(carData);
 
     if (!zodResult.success) {
-      const formattedErrors = zodResult.error.errors.reduce(
+      const formatError = zodResult.error.errors.reduce(
         (acc, error) => {
           const path = error.path[0] as string;
-          const errorDetails: Record<string, unknown> = {
+          const errorDetails = {
             message: error.message,
             name: 'ValidatorError',
             properties: {
               message: error.message,
               type: error.code,
               min: 0,
+              max: 0,
             },
             kind: error.code,
             path,
           };
 
           if ('minimum' in error) {
-            errorDetails.properties.min = error.minimum;
+            errorDetails.properties.min = error.minimum as number;
           }
           if ('maximum' in error) {
-            errorDetails.properties.max = error.maximum;
-          }
-          if ('received' in error) {
-            errorDetails.value = error.received;
+            errorDetails.properties.max = error.maximum as number;
           }
           acc[path] = errorDetails;
           return acc;
@@ -39,15 +37,16 @@ const createCar = async (req: Request, res: Response): Promise<void> => {
         {} as Record<string, unknown>,
       );
 
-      return res.status(400).json({
+      res.status(400).json({
         message: 'Validation failed',
         success: false,
         error: {
           name: 'ValidationError',
-          errors: formattedErrors,
+          errors: formatError,
         },
         stack: new Error().stack,
       });
+      return;
     }
 
     const result = await carServices.createCarIntoDB(zodResult.data);
@@ -71,7 +70,6 @@ const getCar = async (req: Request, res: Response) => {
   try {
     const { searchTerm } = req.query;
 
-    // Call service with optional searchTerm
     const result = await carServices.getCarIntoDb(searchTerm as string);
 
     res.status(200).json({
@@ -146,7 +144,7 @@ const deleteCar = async (req: Request, res: Response) => {
   }
 };
 
-//Export
+// Export
 export const carController = {
   createCar,
   getCar,
