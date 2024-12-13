@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { z } from 'zod';
 
 const carValidationSchema = z.object({

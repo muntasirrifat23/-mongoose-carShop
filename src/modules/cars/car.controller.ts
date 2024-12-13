@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Request, Response } from 'express';
 import { carServices } from './car.service';
 import validateCar from './car.zodvalidation';

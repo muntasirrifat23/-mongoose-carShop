@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { model, Schema } from 'mongoose';
 import { Cars } from './car.interface';
 
