@@ -7,7 +7,7 @@ export type Cars = {
   model: string;
   year: number;
   price: number;
-  category: string;
+  category: 'Sedan' | 'SUV' | 'Truck' | 'Coupe' | 'Convertible';
   description: string;
   quantity: number;
   inStock: boolean;

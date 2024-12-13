@@ -9,7 +9,7 @@ const carValidationSchema = z.object({
     .int()
     .positive({ message: 'Year must be a positive integer' }),
   price: z.number().positive({ message: 'Price must be a positive number' }),
-  category: z.string().min(1, { message: 'Category is required' }),
+  category: z.enum(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']),
   description: z.string().optional(),
   quantity: z
     .number()

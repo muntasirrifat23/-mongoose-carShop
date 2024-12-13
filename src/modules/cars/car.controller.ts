@@ -58,6 +58,7 @@ const createCar = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+
 // Get Car
 const getCar = async (req: Request, res: Response) => {
   try {
