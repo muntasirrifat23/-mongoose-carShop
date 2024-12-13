@@ -3,8 +3,9 @@ import { CarsModel } from './car.model';
 
 // Create Cars
 const createCarIntoDB = async (carData: Cars) => {
-  const postCar = new CarsModel(carData);
-  return await postCar.save();
+  // const postCar = new CarsModel(carData);
+  // return await postCar.save();
+  return await CarsModel.create(carData);
 };
 
 const getCarIntoDb = async (searchTerm?: string) => {

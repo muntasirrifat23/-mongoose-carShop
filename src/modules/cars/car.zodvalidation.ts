@@ -7,7 +7,8 @@ const carValidationSchema = z.object({
     .min(1, { message: 'Id is required' })
     .regex(/^[a-zA-Z0-9]+$/, {
       message: 'Please give valid id',
-    }),
+    })
+    .optional(),
   brand: z
     .string()
     .min(1, { message: 'Brand is required' })

@@ -4,67 +4,93 @@ import { carServices } from './car.service';
 import validateCar from './car.zodvalidation';
 
 // Create car
+// const createCar = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const carData = req.body;
+//     const zodResult = validateCar.safeParse(carData);
+
+//     if (!zodResult.success) {
+//       const errors = zodResult.error.errors.reduce(
+//         (acc, error) => {
+//           acc[error.path[0] as string] = error.message;
+//           return acc;
+//         },
+//         {} as Record<string, string>
+//       );
+
+//       res.status(400).json({
+//         message: 'Validation failed',
+//         success: false,
+//         errors,
+//       });
+//       return;
+//     }
+
+//     const result = await carServices.createCarIntoDB(zodResult.data);
+
+//     res.status(201).json({
+//       message: 'Car created successfully',
+//       success: true,
+//       data: result,
+//     });
+//   } catch (err) {
+//     const error = err as Error;
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || 'An unexpected error occurred while creating the car.',
+//     });
+//   }
+// };
 const createCar = async (req: Request, res: Response): Promise<void> => {
   try {
-    const carData = req.body.cars;
+    const carData = req.body;
     const zodResult = validateCar.safeParse(carData);
 
     if (!zodResult.success) {
-      const formatError = zodResult.error.errors.reduce(
-        (acc, error) => {
-          const path = error.path[0] as string;
-          const errorDetails = {
+      const errors = zodResult.error.errors.reduce((acc, error) => {
+        acc[error.path[0] as string] = {
+          message: error.message,
+          name: 'ValidatorError',
+          properties: {
             message: error.message,
-            name: 'ValidatorError',
-            properties: {
-              message: error.message,
-              type: error.code,
-              min: 0,
-              max: 0,
-            },
-            kind: error.code,
-            path,
-          };
-
-          if ('minimum' in error) {
-            errorDetails.properties.min = error.minimum as number;
-          }
-          if ('maximum' in error) {
-            errorDetails.properties.max = error.maximum as number;
-          }
-          acc[path] = errorDetails;
-          return acc;
-        },
-        {} as Record<string, unknown>,
-      );
+            type: error.code,
+          },
+          kind: error.code,
+          path: error.path[0],
+          value: carData[error.path[0] as keyof typeof carData],
+        };
+        return acc;
+      }, {} as Record<string, unknown>);
 
       res.status(400).json({
         message: 'Validation failed',
         success: false,
         error: {
           name: 'ValidationError',
-          errors: formatError,
+          errors,
         },
-        stack: new Error().stack,
+        stack: new Error('Validation Error').stack,
       });
       return;
     }
 
     const result = await carServices.createCarIntoDB(zodResult.data);
 
-    res.status(200).json({
+    res.status(201).json({
       message: 'Car created successfully',
       success: true,
       data: result,
     });
-  } catch (err: unknown) {
+  } catch (err) {
     const error = err as Error;
     res.status(500).json({
       success: false,
-      message: error.message || 'Car post is wrong',
+      message: error.message || 'An unexpected error occurred while creating the car.',
     });
   }
 };
+
+
 
 // Get Car
 const getCar = async (req: Request, res: Response) => {
