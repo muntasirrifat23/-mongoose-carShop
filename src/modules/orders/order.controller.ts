@@ -6,8 +6,7 @@ import { z } from 'zod';
 // Create Order
 const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const orderData = req.body.orders;
-    const zodOrderData = orderValidationSchema.parse(orderData);
+    const zodOrderData = orderValidationSchema.parse(req.body);
     const result = await orderServices.createOrderIntoDb(zodOrderData);
 
     res.status(200).json({

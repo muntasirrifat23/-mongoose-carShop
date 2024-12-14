@@ -19,8 +19,7 @@ const zod_1 = require("zod");
 // Create Order
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const orderData = req.body.orders;
-        const zodOrderData = order_zodvalidation_1.default.parse(orderData);
+        const zodOrderData = order_zodvalidation_1.default.parse(req.body);
         const result = yield order_service_1.orderServices.createOrderIntoDb(zodOrderData);
         res.status(200).json({
             message: 'Order created successfully',
