@@ -13,8 +13,9 @@ exports.carServices = void 0;
 const car_model_1 = require("./car.model");
 // Create Cars
 const createCarIntoDB = (carData) => __awaiter(void 0, void 0, void 0, function* () {
-    const postCar = new car_model_1.CarsModel(carData);
-    return yield postCar.save();
+    // const postCar = new CarsModel(carData);
+    // return await postCar.save();
+    return yield car_model_1.CarsModel.create(carData);
 });
 const getCarIntoDb = (searchTerm) => __awaiter(void 0, void 0, void 0, function* () {
     const filter = {};

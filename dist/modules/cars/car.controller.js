@@ -18,30 +18,21 @@ const car_zodvalidation_1 = __importDefault(require("./car.zodvalidation"));
 // Create car
 const createCar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const carData = req.body.cars;
+        const carData = req.body;
         const zodResult = car_zodvalidation_1.default.safeParse(carData);
         if (!zodResult.success) {
-            const formatError = zodResult.error.errors.reduce((acc, error) => {
-                const path = error.path[0];
-                const errorDetails = {
+            const errors = zodResult.error.errors.reduce((acc, error) => {
+                acc[error.path[0]] = {
                     message: error.message,
                     name: 'ValidatorError',
                     properties: {
                         message: error.message,
                         type: error.code,
-                        min: 0,
-                        max: 0,
                     },
                     kind: error.code,
-                    path,
+                    path: error.path[0],
+                    value: carData[error.path[0]],
                 };
-                if ('minimum' in error) {
-                    errorDetails.properties.min = error.minimum;
-                }
-                if ('maximum' in error) {
-                    errorDetails.properties.max = error.maximum;
-                }
-                acc[path] = errorDetails;
                 return acc;
             }, {});
             res.status(400).json({
@@ -49,14 +40,14 @@ const createCar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 success: false,
                 error: {
                     name: 'ValidationError',
-                    errors: formatError,
+                    errors,
                 },
-                stack: new Error().stack,
+                stack: new Error('Validation Error').stack,
             });
             return;
         }
         const result = yield car_service_1.carServices.createCarIntoDB(zodResult.data);
-        res.status(200).json({
+        res.status(201).json({
             message: 'Car created successfully',
             success: true,
             data: result,
@@ -66,7 +57,7 @@ const createCar = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const error = err;
         res.status(500).json({
             success: false,
-            message: error.message || 'Car post is wrong',
+            message: error.message || 'An unexpected error occurred while creating the car.',
         });
     }
 });

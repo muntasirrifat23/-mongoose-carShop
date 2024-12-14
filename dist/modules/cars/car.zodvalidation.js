@@ -1,46 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateCar = void 0;
+/* eslint-disable prettier/prettier */
 const zod_1 = require("zod");
 const carValidationSchema = zod_1.z.object({
-    _id: zod_1.z
-        .string()
-        .min(1, { message: 'Id is required' })
-        .regex(/^[a-zA-Z0-9]+$/, {
-        message: 'Please give valid id',
-    }),
-    brand: zod_1.z
-        .string()
-        .min(1, { message: 'Brand is required' })
-        .regex(/^[a-zA-Z\s]+$/, {
-        message: 'Give brand as string',
-    }),
-    model: zod_1.z
-        .string()
-        .min(1, { message: 'Model is required' })
-        .regex(/^[a-zA-Z0-9\s]+$/, {
-        message: 'Give model as string',
-    }),
+    brand: zod_1.z.string().min(1, { message: 'Brand is required' }),
+    model: zod_1.z.string().min(1, { message: 'Model is required' }),
     year: zod_1.z
         .number()
         .int()
-        .min(1990, { message: 'Year must be 1990 or later' })
-        .max(new Date().getFullYear(), {
-        message: `Year cannot over ${new Date().getFullYear()}`,
-    }),
-    price: zod_1.z.number().min(0, { message: 'Price positive number' }),
-    category: zod_1.z.enum(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible'], {
-        errorMap: () => ({
-            message: 'Category must be one of Sedan, SUV, Truck, Coupe, Convertible',
-        }),
-    }),
-    description: zod_1.z.string().min(1, { message: 'Description required' }),
-    quantity: zod_1.z.number().int().min(0, { message: 'Quantity positive integer' }),
-    inStock: zod_1.z.boolean({
-        errorMap: () => ({
-            message: 'InStock boolean value',
-        }),
-    }),
+        .positive({ message: 'Year must be a positive integer' }),
+    price: zod_1.z.number().positive({ message: 'Price must be a positive number' }),
+    category: zod_1.z.enum(['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible']),
+    description: zod_1.z.string().optional(),
+    quantity: zod_1.z
+        .number()
+        .int()
+        .nonnegative({ message: 'Quantity must be a non-negative integer' }),
+    inStock: zod_1.z.boolean().optional(),
 });
 const validateCar = (data) => carValidationSchema.safeParse(data);
 exports.validateCar = validateCar;
